@@ -135,7 +135,7 @@ async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promi
       };
     } else {
       // Using the standard Gemini model with a generic reformulation prompt
-      endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+      endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
       requestBody = {
         contents: [{
           parts: [{
