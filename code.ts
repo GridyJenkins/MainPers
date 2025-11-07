@@ -118,14 +118,19 @@ figma.ui.onmessage = async (msg) => {
 // Function to call Gemini AI API
 async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promise<string> {
   try {
+    // Clean up the gemId
+    const cleanGemId = gemId ? gemId.trim() : "";
+
     // Construct the API endpoint
     // If gemId is provided, use the Gem-specific endpoint, otherwise use the standard model
     let endpoint: string;
     let requestBody: any;
+    let usingGem = false;
 
-    if (gemId && gemId.trim() !== "") {
+    if (cleanGemId !== "") {
       // Using a Gem (with pre-configured guidelines)
-      endpoint = `https://generativelanguage.googleapis.com/v1beta/gems/${gemId}:generateContent?key=${apiKey}`;
+      usingGem = true;
+      endpoint = `https://generativelanguage.googleapis.com/v1beta/gems/${cleanGemId}:generateContent?key=${apiKey}`;
       requestBody = {
         contents: [{
           parts: [{
@@ -133,6 +138,7 @@ async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promi
           }]
         }]
       };
+      console.log(`[Plugin] Utilisation du Gem: ${cleanGemId}`);
     } else {
       // Using the standard Gemini model with a generic reformulation prompt
       endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -149,6 +155,7 @@ async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promi
           maxOutputTokens: 1024,
         }
       };
+      console.log(`[Plugin] Utilisation du modèle standard: gemini-1.5-flash`);
     }
 
     const response = await fetch(endpoint, {
@@ -161,7 +168,9 @@ async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promi
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`API Error: ${errorData.error?.message || response.statusText}`);
+      const errorMsg = errorData.error?.message || response.statusText;
+      const mode = usingGem ? `Gem (${cleanGemId})` : 'modèle standard (gemini-1.5-flash)';
+      throw new Error(`API Error [${mode}]: ${errorMsg}`);
     }
 
     const data = await response.json();

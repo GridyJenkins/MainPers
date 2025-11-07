@@ -105,13 +105,17 @@ figma.ui.onmessage = async (msg) => {
 async function callGeminiAPI(apiKey, gemId, text) {
     var _a, _b, _c, _d, _e;
     try {
+        // Clean up the gemId
+        const cleanGemId = gemId ? gemId.trim() : "";
         // Construct the API endpoint
         // If gemId is provided, use the Gem-specific endpoint, otherwise use the standard model
         let endpoint;
         let requestBody;
-        if (gemId && gemId.trim() !== "") {
+        let usingGem = false;
+        if (cleanGemId !== "") {
             // Using a Gem (with pre-configured guidelines)
-            endpoint = `https://generativelanguage.googleapis.com/v1beta/gems/${gemId}:generateContent?key=${apiKey}`;
+            usingGem = true;
+            endpoint = `https://generativelanguage.googleapis.com/v1beta/gems/${cleanGemId}:generateContent?key=${apiKey}`;
             requestBody = {
                 contents: [{
                         parts: [{
@@ -119,6 +123,7 @@ async function callGeminiAPI(apiKey, gemId, text) {
                             }]
                     }]
             };
+            console.log(`[Plugin] Utilisation du Gem: ${cleanGemId}`);
         }
         else {
             // Using the standard Gemini model with a generic reformulation prompt
@@ -136,6 +141,7 @@ async function callGeminiAPI(apiKey, gemId, text) {
                     maxOutputTokens: 1024,
                 }
             };
+            console.log(`[Plugin] Utilisation du modèle standard: gemini-1.5-flash`);
         }
         const response = await fetch(endpoint, {
             method: "POST",
@@ -146,7 +152,9 @@ async function callGeminiAPI(apiKey, gemId, text) {
         });
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(`API Error: ${((_a = errorData.error) === null || _a === void 0 ? void 0 : _a.message) || response.statusText}`);
+            const errorMsg = ((_a = errorData.error) === null || _a === void 0 ? void 0 : _a.message) || response.statusText;
+            const mode = usingGem ? `Gem (${cleanGemId})` : 'modèle standard (gemini-1.5-flash)';
+            throw new Error(`API Error [${mode}]: ${errorMsg}`);
         }
         const data = await response.json();
         // Extract the generated text from the response
