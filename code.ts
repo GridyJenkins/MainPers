@@ -79,9 +79,10 @@ figma.ui.onmessage = async (msg) => {
       });
 
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue';
       figma.ui.postMessage({
         type: "error",
-        message: `Erreur: ${error.message}`
+        message: `Erreur: ${errorMessage}`
       });
     }
   }
@@ -173,6 +174,7 @@ async function callGeminiAPI(apiKey: string, gemId: string, text: string): Promi
     }
 
   } catch (error) {
-    throw new Error(`Erreur lors de l'appel à l'API Gemini: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+    throw new Error(`Erreur lors de l'appel à l'API Gemini: ${errorMessage}`);
   }
 }

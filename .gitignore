@@ -2,7 +2,7 @@
 node_modules/
 
 # Compiled output
-code.js
+# code.js est inclus dans le repo pour faciliter l'utilisation
 
 # IDE
 .vscode/
