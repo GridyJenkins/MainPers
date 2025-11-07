@@ -1,0 +1,25 @@
+{
+  "name": "figma-ai-text-regenerator",
+  "version": "1.0.0",
+  "description": "Un plugin Figma qui utilise Google Gemini AI pour régénérer et reformuler automatiquement vos textes",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "figma",
+    "plugin",
+    "ai",
+    "gemini",
+    "text",
+    "regeneration",
+    "ux-writing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.90.0",
+    "typescript": "^5.3.3"
+  }
+}

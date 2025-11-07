@@ -1,0 +1,14 @@
+{
+  "name": "AI Text Regenerator",
+  "id": "ai-text-regenerator",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://generativelanguage.googleapis.com"
+    ],
+    "reasoning": "This plugin needs to communicate with Google Gemini AI API to regenerate text based on custom guidelines"
+  }
+}
