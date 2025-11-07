@@ -127,7 +127,7 @@ async function callGeminiAPI(apiKey, gemId, text) {
         }
         else {
             // Using the standard Gemini model with a generic reformulation prompt
-            endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             requestBody = {
                 contents: [{
                         parts: [{
@@ -141,7 +141,7 @@ async function callGeminiAPI(apiKey, gemId, text) {
                     maxOutputTokens: 1024,
                 }
             };
-            console.log(`[Plugin] Utilisation du modèle standard: gemini-1.5-flash`);
+            console.log(`[Plugin] Utilisation du modèle standard: gemini-1.5-flash (v1beta)`);
         }
         const response = await fetch(endpoint, {
             method: "POST",
